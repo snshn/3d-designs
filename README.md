@@ -1,2 +1,2 @@
-# 3d-prints
+# 3D Prints
 Various objects for 3D Printers
