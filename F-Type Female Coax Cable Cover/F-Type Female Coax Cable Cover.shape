@@ -1,0 +1,36 @@
+// ShapeScript document
+
+// cable cover cap
+
+detail 80
+
+difference {
+    // outer
+    cylinder {
+        size 10.6 9
+    }
+
+    // inner
+    cylinder {
+        size 9.8 8.5
+        position 0 0.5
+    }
+
+    // tip
+    difference {
+        cylinder {
+            size 10.6 9
+        }
+        cone {
+            size 30 20
+            orientation -1
+            position 0 -1
+        }
+    }
+}
+
+// small bump (to lock it in place against the thread)
+sphere {
+    size 0.9
+    position 4.85 -2
+}

@@ -1,0 +1,202 @@
+// ShapeScript document
+
+// walls: 0.35mm (minimum for most FDM machines is 0.4mm)
+// width: 17mm
+// depth: 16.45mm
+// height: 1.5mm
+// corner-radius: 3mm
+// hammer diameter: 4mm
+// hammer height: 1mm
+// total height with hinges: 2.06mm
+
+// inside: 16.2 x 15.5
+
+detail 32
+
+define WIDTH  16.99
+define DEPTH  16.45
+define HEIGHT 1.5
+define WALL   0.41 // has to be > 0.4mm (3d printer nozzle)
+define RADIUS 3.0
+
+define x ((WIDTH - RADIUS) / 2)
+define z ((DEPTH - RADIUS) / 2)
+
+define body {
+    difference {
+        cube {
+            size WIDTH HEIGHT DEPTH
+        }
+
+        difference {
+            cube {
+                size WIDTH HEIGHT DEPTH
+            }
+
+            cylinder {
+                size RADIUS HEIGHT
+                position -x 0 -z
+            }
+            cylinder {
+                size RADIUS HEIGHT
+                position x 0 z
+            }
+            cylinder {
+                size RADIUS HEIGHT
+                position -x 0 z
+            }
+            cylinder {
+                size RADIUS HEIGHT
+                position x 0 -z
+            }
+
+            cube {
+                size (WIDTH) (HEIGHT) (DEPTH - RADIUS)
+            }
+            cube {
+                size (WIDTH - RADIUS) HEIGHT DEPTH
+            }
+        }
+    }
+}
+
+define innerspace {
+    define INNERHEIGHT HEIGHT - WALL
+    define INNERRADIUS (RADIUS - WALL * 2)
+
+    define innercyl {
+        cylinder {
+            size INNERRADIUS INNERHEIGHT
+        }
+    }
+
+    cube {
+        size (WIDTH - WALL * 2) (INNERHEIGHT) (DEPTH - RADIUS)
+    }
+    cube {
+        size (WIDTH - RADIUS) (INNERHEIGHT) (DEPTH - WALL * 2)
+    }
+
+    innercyl {
+        position -x 0 -z
+    }
+    innercyl {
+        position x 0 z
+    }
+    innercyl {
+        position -x 0 z
+    }
+    innercyl {
+        position x 0 -z
+    }
+}
+
+define KEY {
+    opacity 0.8
+
+    difference {
+        body {
+            color 200 200 200
+        }
+
+        innerspace {
+            color 35 35 35
+            position 0 (WALL / 2 + 0.00000000001)
+        }
+    }
+
+    // Hammer
+    group {
+        position 0 0.075
+
+        difference {
+            cylinder {
+                size 4 1
+            }
+
+            cube {
+                size 4 1 1
+                position 0 0 -2.25
+            }
+
+            cylinder {
+                size 1.75 0.2
+                position 0 0.5
+            }
+        }
+
+        cylinder {
+            size 1.8 0.1
+            position 0 -0.4 -1.75
+        }
+    }
+
+    define HINGESHEIGHT  2.06 - WALL
+    define HINGESGAUGE   0.8
+    define HINGEGAUGEPOS -0.1
+
+    // Locks
+    group {
+        define lock {
+            difference {
+                cube {
+                    size 0.45 HINGESHEIGHT 1.6
+                }
+                cube {
+                    size 0.45 1 0.5
+                    position 0 0.4
+                }
+                cylinder {
+                    size HINGESGAUGE
+                    orientation 0 0.5 0.5
+                    position 0 HINGEGAUGEPOS
+                }
+            }
+        }
+
+        define x 7.85
+        define y 0.5
+        define z 5.9
+
+        lock {
+            position x y z
+        }
+        lock {
+            position -x y z
+        }
+    }
+
+    // Hinges
+    group {
+        define hinge {
+            difference {
+                cube {
+                    size 0.45 HINGESHEIGHT 1.2
+                }
+                cube {
+                    size HINGESGAUGE
+                    position 0 HINGEGAUGEPOS -0.55
+                }
+                cylinder {
+                    size HINGESGAUGE
+                    orientation 0 0.5 0.5
+                    position 0 HINGEGAUGEPOS -0.15
+                }
+            }
+        }
+
+        define x 7.85
+        define y 0.5
+        define z 5.9
+
+        hinge {
+            position x y -z
+        }
+        hinge {
+            position -x y -z
+        }
+    }
+}
+
+KEY
+
