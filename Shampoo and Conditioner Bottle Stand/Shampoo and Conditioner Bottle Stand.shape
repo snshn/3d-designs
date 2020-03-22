@@ -1,0 +1,108 @@
+// ShapeScript document
+
+// Shampoo & conditioner bottle stand
+
+detail 32 * 2
+
+difference {
+
+    ////////////////
+    // Base block //
+    ////////////////
+
+    // 40mm height, 160mm long, 80mm wide
+    cube {
+        color 0 128 64
+        size 0.8 0.36 1.6
+    }
+
+    // Wall/bath edge curvature
+    difference {
+        cube {
+            color 32 128 64
+            size 0.05 0.05 1.6
+            position 0.375 -0.155
+        }
+        cylinder {
+            size 0.1 2
+            position 0.35 -0.13
+            orientation 0.5 0 0.5 // rotate 90 degrees around the X and Z axiz
+        }
+    }
+
+
+    /////////////
+    // Shampoo //
+    /////////////
+
+    // 27mm hole for the cap
+    cylinder {
+        position 0 0.5 0.385
+        size 0.2775 4
+    }
+
+    difference {
+        // 57mm sphere
+        sphere {
+            color 0 1 0
+            position 0 0.30 0.385
+            size 0.57
+        }
+        cube {
+            color 2 3 4
+            size 0.8 0.3 1.6
+        }
+    }
+
+    // 57mm dimple for the top of the shampoo bottle
+    sphere {
+        color 0 1 0
+        position 0 0.35 0.385
+        size 0.57
+    }
+
+    // Shampoo drain
+    cylinder {
+        size 0.05 0.3
+        position -0.27 -0.179 0.39
+        orientation 0.5 // rotate 90 degrees around the X axis
+    }
+
+
+    /////////////////
+    // Conditioner //
+    /////////////////
+
+    // 27mm hole for the cap
+    cylinder {
+        position 0 0.5 -0.38
+        size 0.2775 4
+    }
+
+    difference {
+        // 62mm sphere
+        sphere {
+            color 0 1 0
+            position 0 0.27 -0.38
+            size 0.62
+        }
+        cube {
+            color 2 3 4
+            size 0.8 0.3 1.6
+        }
+    }
+
+    // 62mm dimple for the top of the conditioner bottle
+    sphere {
+        color 0 1 0
+        position 0 0.37 -0.38
+        size 0.62
+    }
+
+    // Conditioner drain
+    cylinder {
+        size 0.05 0.3
+        position -0.27 -0.179 -0.385
+        orientation 0.5 // rotate 90 degrees around the X axis
+    }
+}
