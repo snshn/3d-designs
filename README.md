@@ -1,2 +1,3 @@
 # 3D Prints
-Various objects for 3D Printers
+
+Various designs for manufacturing using 3D Printers
