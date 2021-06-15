@@ -1,0 +1,83 @@
+// ShapeScript document
+
+// Name: Vacuum cleaner nozzle cap
+// Author: Sunshine
+// Designed on: 06/13/2021
+
+detail 100
+
+define INNERWIDTH 14
+define INNERHEIGHT 34.5
+define LENGTH 60
+define WALLTHICKNESS 1
+define HOLEDIAMETER 2.2
+
+define cap {
+    difference {
+        // Outer
+        group {
+            cylinder {
+                size INNERWIDTH+WALLTHICKNESS*2  LENGTH+WALLTHICKNESS*2
+                position INNERHEIGHT/2 - INNERWIDTH/2
+            }
+
+            cube {
+                size INNERHEIGHT-INNERWIDTH  LENGTH+WALLTHICKNESS*2  INNERWIDTH+WALLTHICKNESS*2
+            }
+
+            cylinder {
+                size INNERWIDTH+WALLTHICKNESS*2  LENGTH+WALLTHICKNESS*2
+                position -INNERHEIGHT/2 + INNERWIDTH/2
+            }
+        }
+
+        // Inner (shape of the nozzle)
+        group {
+            cylinder {
+                size INNERWIDTH  LENGTH
+                position INNERHEIGHT/2 - INNERWIDTH/2
+            }
+
+            cube {
+                size INNERHEIGHT-INNERWIDTH  LENGTH  INNERWIDTH
+            }
+
+            cylinder {
+                size INNERWIDTH  LENGTH
+                position -INNERHEIGHT/2 + INNERWIDTH/2
+            }
+        }
+
+        // Cut one side off
+        cube {
+            size (INNERHEIGHT+WALLTHICKNESS*2)*2  LENGTH  INNERWIDTH+WALLTHICKNESS*2
+            position -LENGTH/3 -LENGTH/3 0
+            orientation 0.25
+        }
+
+        // Grill
+        for i in -2 to 3 {
+            cylinder {
+                size HOLEDIAMETER  WALLTHICKNESS
+                position i*(INNERHEIGHT/7)-((INNERHEIGHT/7)/2)  LENGTH/2+WALLTHICKNESS/2  -1*(INNERWIDTH/3)
+            }
+        }
+        for i in -3 to 3 {
+            cylinder {
+                size HOLEDIAMETER  WALLTHICKNESS
+                position i*(INNERHEIGHT/7)  LENGTH/2+WALLTHICKNESS/2  0
+            }
+        }
+        for i in -2 to 3 {
+            cylinder {
+                size HOLEDIAMETER  WALLTHICKNESS
+                position i*(INNERHEIGHT/7)-((INNERHEIGHT/7)/2)  LENGTH/2+WALLTHICKNESS/2  1*(INNERWIDTH/3)
+            }
+        }
+    }
+}
+
+cap {
+    opacity 0.75
+    orientation 0 0 0.5
+}
