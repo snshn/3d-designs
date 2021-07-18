@@ -1,0 +1,105 @@
+// ShapeScript document
+
+detail 80
+
+define baseThickness               5     // mm
+define distanceBetweenScrews      31     // mm
+define motorHoleDiameter          25     // mm
+define opticalSensorWidth         14.4   // mm
+define opticalSensorThickness      1.6   // mm
+define opticalSensorLength        31.27  // mm
+define opticalSensorHoleDiameter   3     // mm
+define screwHoleDiameter           3.2   // mm
+define screwSlotDiameter           6     // mm
+
+difference {
+    // Base
+    cube {
+        size 40 40 baseThickness
+    }
+
+    // Hole for the motor's spindle/gear
+    cylinder {
+        size motorHoleDiameter baseThickness
+        orientation 0 0 0.5
+    }
+
+    // Holes for screws
+    group {
+        cylinder {
+            size screwHoleDiameter baseThickness
+            orientation 0 0 0.5
+            position distanceBetweenScrews/2 distanceBetweenScrews/2
+        }
+        cylinder {
+            size screwHoleDiameter baseThickness
+            orientation 0 0 0.5
+            position distanceBetweenScrews/2 -distanceBetweenScrews/2
+        }
+        cylinder {
+            size screwHoleDiameter baseThickness
+            orientation 0 0 0.5
+            position -distanceBetweenScrews/2 distanceBetweenScrews/2
+        }
+        cylinder {
+            size screwHoleDiameter baseThickness
+            orientation 0 0 0.5
+            position -distanceBetweenScrews/2 -distanceBetweenScrews/2
+        }
+    }
+
+    // Slots for screws
+    group {
+        cylinder {
+            size screwSlotDiameter baseThickness-1
+            orientation 0 0 0.5
+            position distanceBetweenScrews/2 distanceBetweenScrews/2 0.5
+        }
+        cylinder {
+            size screwSlotDiameter baseThickness-1
+            orientation 0 0 0.5
+            position distanceBetweenScrews/2 -distanceBetweenScrews/2 0.5
+        }
+        cylinder {
+            size screwSlotDiameter baseThickness-1
+            orientation 0 0 0.5
+            position -distanceBetweenScrews/2 distanceBetweenScrews/2 0.5
+        }
+        cylinder {
+            size screwSlotDiameter baseThickness-1
+            orientation 0 0 0.5
+            position -distanceBetweenScrews/2 -distanceBetweenScrews/2 0.5
+        }
+    }
+}
+
+cube {
+    position -32 2 (5-baseThickness)/2
+    size 24 6 5
+}
+cube {
+    position -49 -4 (7-baseThickness)/2
+    size 20 6 7
+}
+
+difference {
+    position -49 -4 12.5
+
+    // Support
+    cube {
+        size 20 6 20
+    }
+
+    // Cutout for optical sensor
+    cube {
+        size opticalSensorLength 2 opticalSensorWidth
+        position 0 -2 0
+        color 0 0 1
+    }
+
+    // Hole for the screw
+    cylinder {
+        size opticalSensorHoleDiameter 20
+        position -6.5 0 0
+    }
+}
