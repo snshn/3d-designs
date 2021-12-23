@@ -1,0 +1,45 @@
+// ShapeScript document
+
+// Name: Rod Soap Dish
+// Author: Sunshine
+// Designed on: 12/22/2021
+
+detail 1
+
+define RODTHICKNESS 6
+define RODDISTANCE  16
+define RODLENGTH    105
+define STANDLENGTH  75
+
+define STAND {
+    cube {
+        size RODTHICKNESS RODTHICKNESS STANDLENGTH
+    }
+}
+
+define ROD {
+    cube {
+        size RODTHICKNESS RODTHICKNESS RODLENGTH
+    }
+}
+
+define SOAPDISH {
+    STAND {
+        position 0 0 (RODLENGTH/2 - RODTHICKNESS*2)
+        orientation 0 0 0.5
+    }
+    STAND {
+        position 0 0 -(RODLENGTH/2 - RODTHICKNESS*2)
+        orientation 0 0 0.5
+    }
+
+    for i in -2 to 2 {
+        ROD {
+            position RODTHICKNESS i*RODDISTANCE 0
+        }
+    }
+}
+
+SOAPDISH {
+    orientation 0.5 0 0
+}
