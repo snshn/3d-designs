@@ -1,0 +1,19 @@
+// ShapeScript document
+
+// Name: Gravity Water Filter Sealing Ring
+// Author: Sunshine
+// Designed on: 12/28/2021
+
+detail 100
+
+define RINGDIAMETER  192 // mm
+define RINGTHICKNESS   2 // mm
+
+extrude {
+    circle {
+        size RINGTHICKNESS
+    }
+    along circle {
+        size RINGDIAMETER
+    }
+}
