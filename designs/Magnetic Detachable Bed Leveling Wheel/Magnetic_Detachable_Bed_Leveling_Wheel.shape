@@ -1,0 +1,99 @@
+// ShapeScript document
+
+// Name: Magnetic Detachable Bed Leveling Wheel
+// Author: Sunshine
+// Designed on: 01/25/2022
+
+detail 100
+
+define NOZZLEDIAMETER       0.4  // mm
+define DIAMETER            60    // mm
+define THICKNESS            8    // mm
+define SCREWHOLEDIAMETER    4.4  // mm
+define NUTSLOTDIAMETER      7.3  // mm
+define NUTSLOTDEPTH         3    // mm
+define MAGNETSLOTLENGTH   20.2   // mm
+define MAGNETSLOTDEPTH      5.4  // mm
+define MAGNETSLOTWIDTH   10.2    // mm
+
+define base {
+    difference {
+        union {
+            cylinder {
+                size DIAMETER-THICKNESS THICKNESS
+            }
+
+            extrude {
+                circle {
+                    size THICKNESS
+                }
+                along circle {
+                    size DIAMETER - THICKNESS
+                }
+                orientation 0 0 0.5
+            }
+        }
+
+        for i in (360 / 20) to 360 step (360 / 20) {
+            group {
+                orientation 0 (i / 180)
+
+                cylinder {
+                    size 5 THICKNESS
+                    position DIAMETER/2
+                }
+            }
+        }
+    }
+}
+
+
+define nutSlot {
+    union {
+        // Opening for M4 screw to go through
+        cylinder {
+            size SCREWHOLEDIAMETER THICKNESS
+        }
+
+        // Main slot for typical hexagonal nut
+        cylinder {
+            detail 6
+            size NUTSLOTDIAMETER*1.15 NUTSLOTDEPTH
+            position 0 THICKNESS/2-NUTSLOTDEPTH/2 0
+        }
+
+        // Slot for self-tightening extension
+        cylinder {
+            size NUTSLOTDIAMETER 2
+        }
+    }
+}
+
+// For small neodymium magnets of any type, up to 8mm thick & 25mm in diameter
+define magnetSlot {
+    cube {
+        size MAGNETSLOTWIDTH MAGNETSLOTDEPTH MAGNETSLOTLENGTH
+    }
+}
+
+define detachableMagneticBedLevelingWheel {
+    difference {
+        base
+        nutSlot
+
+        for i in (360 / 2) to 360 step (360 / 2) {
+            group {
+                orientation 0 (i / 180)
+
+                magnetSlot {
+                    position 0 (THICKNESS/2-MAGNETSLOTDEPTH/2) -(NUTSLOTDIAMETER/2 + MAGNETSLOTLENGTH/2 + NOZZLEDIAMETER*1.5)
+                }
+            }
+        }
+
+    }
+}
+
+detachableMagneticBedLevelingWheel {
+    orientation 0 0 -0.5
+}
