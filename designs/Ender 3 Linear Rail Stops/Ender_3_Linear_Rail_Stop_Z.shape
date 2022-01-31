@@ -1,0 +1,46 @@
+// ShapeScript document
+
+// Name: Ender 3 Linear Rail Stop Z
+// Author: Sunshine
+// Designed on: 01/29/2022
+
+detail 100
+
+define HEIGHT              8    // mm
+define LENGTH             20    // mm
+define WIDTH              12    // mm
+define SCREWHOLEDIAMETER   4.4  // mm
+define SCREWSLOTDIAMETER   7.4  // mm
+define SCREWSLOTDEPTH      6    // mm
+
+define base {
+    cube {
+        size WIDTH HEIGHT LENGTH
+    }
+}
+
+define screwSlot {
+    union {
+        cylinder {
+            size SCREWHOLEDIAMETER HEIGHT
+        }
+
+        cylinder {
+            size SCREWSLOTDIAMETER SCREWSLOTDEPTH
+            position 0 (HEIGHT-SCREWSLOTDEPTH)/2
+        }
+    }
+}
+
+define linearRailStopZ {
+    difference {
+        base
+
+        screwSlot {
+        }
+    }
+}
+
+linearRailStopZ {
+    orientation 0 0 -0.5
+}
