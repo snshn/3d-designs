@@ -1,0 +1,59 @@
+// ShapeScript document
+
+// Name: Ender 3 Linear Rail Stop XY
+// Author: Sunshine
+// Designed on: 01/24/2022
+
+detail 100
+
+define HEIGHT              8    // mm
+define LENGTH             24    // mm
+define WIDTH              12    // mm
+define SCREWHOLEDIAMETER   3.4  // mm
+define SCREWSLOTDIAMETER   5.6  // mm
+define SCREWSLOTDEPTH      5    // mm
+
+define base {
+    union {
+        cylinder {
+            size WIDTH HEIGHT
+            position 0 0 LENGTH/2-WIDTH/2
+        }
+
+        cube {
+            size WIDTH HEIGHT LENGTH-WIDTH/2
+            position 0 0 -(WIDTH/4)
+        }
+    }
+}
+
+define screwSlot {
+    union {
+        cylinder {
+            size SCREWHOLEDIAMETER HEIGHT
+        }
+
+        cylinder {
+            size SCREWSLOTDIAMETER SCREWSLOTDEPTH
+            position 0 (HEIGHT-SCREWSLOTDEPTH)/2
+        }
+    }
+}
+
+define linearRailStopXY {
+    difference {
+        base
+
+        screwSlot {
+            position 0 0 -6
+        }
+
+        screwSlot {
+            position 0 0 6
+        }
+    }
+}
+
+linearRailStopXY {
+    orientation 0 0 -0.5
+}
