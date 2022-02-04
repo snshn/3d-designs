@@ -1,0 +1,178 @@
+// ShapeScript document
+
+// Name: Venus Flytrap Pot
+// Author: Sunshine <sunshine@uberspace.net>
+// Designed on: 01/03/2022
+
+detail 100
+
+define WALLTHICKNESS        2
+define INNERRADIUS         64
+define INNERCYLINDERHEIGHT 60
+define OUTERGAP            50
+define HOLECOUNT           10
+
+define PLANTER {
+    opacity 0.5
+
+    difference {
+        // Inner chamber and walls
+        group {
+            // Inner chamber's cylinder
+            cylinder {
+                size (INNERRADIUS + WALLTHICKNESS * 2) INNERCYLINDERHEIGHT
+            }
+
+            // Inner chamber's bottom
+            difference {
+                sphere {
+                    size INNERRADIUS + WALLTHICKNESS * 2
+                    position 0 (-INNERCYLINDERHEIGHT / 2)
+                }
+
+                // Holes
+                group {
+                    position 0 -INNERCYLINDERHEIGHT + (INNERRADIUS / 2)
+
+                    for i in 0 to 360 step (360 / 10) {
+                        group {
+                            orientation 0 (i / 360)
+
+                            cylinder {
+                                detail 16
+                                size 3 500
+                                orientation 0.25
+                            }
+                            cylinder {
+                                detail 16
+                                size 3 500
+                                orientation 0.75
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Water tank separators
+            difference {
+                // Separators
+                group {
+                    for i in 0 to 360 step (360 / 5) {
+                        cube {
+                            size (WALLTHICKNESS) (INNERCYLINDERHEIGHT + INNERRADIUS / 2) (INNERRADIUS + OUTERGAP)
+                            position 0 -(INNERRADIUS / 4)
+                            orientation 0 (i / 360)
+                        }
+                    }
+                    orientation 0 0.15
+                }
+
+                // Cut holes to let water evenly spread between sections
+                extrude {
+                    circle
+                    along circle {
+                        size 5
+                    }
+
+                    size 15
+                    detail 16
+                    position 10 -50
+                    orientation 0 0 0.5
+                }
+                extrude {
+                    circle
+                    along circle {
+                        size 5
+                    }
+
+                    size 15
+                    detail 16
+                    position 10 12.5
+                    orientation 0 0 0.5
+                }
+            }
+        }
+
+        // Inner cutout
+        group {
+            cylinder {
+                size INNERRADIUS INNERCYLINDERHEIGHT
+            }
+            sphere {
+                size INNERRADIUS
+                position 0 (-INNERCYLINDERHEIGHT / 2)
+            }
+        }
+
+        // Cut out the top of the inner chamber and water tank separators
+        sphere {
+            size (INNERRADIUS+OUTERGAP)*3
+            position 0 (INNERRADIUS+OUTERGAP)*1.667
+        }
+    }
+
+    // Top
+    difference {
+        sphere {
+            size (INNERRADIUS+OUTERGAP)*3
+        }
+
+        // Make it hollow
+        sphere {
+            size (INNERRADIUS+OUTERGAP)*3 - WALLTHICKNESS
+        }
+
+        // Cut a giant hole through it
+        cylinder {
+            size INNERRADIUS INNERCYLINDERHEIGHT*100
+        }
+
+        // Cut around it 
+        difference {
+            cylinder {
+                size (INNERRADIUS+OUTERGAP + WALLTHICKNESS * 2000) 1000
+                // position 0 (-WALLTHICKNESS / 2)
+            }
+            cylinder {
+                size (INNERRADIUS + OUTERGAP + WALLTHICKNESS*2) 1000
+            }
+        }
+        // Cut the floating piece off
+        cylinder {
+            size (INNERRADIUS+OUTERGAP)*3
+            position 0 100
+        }
+
+        // Make holes for water to go in
+        for i in -360 to 360 step (360 / 5) {
+            group {
+                cylinder {
+                    detail 16
+                    size 4 1000
+                    position 36
+                }
+
+                orientation 0 (i / 360)
+            }
+        }
+
+        position 0 (INNERRADIUS+OUTERGAP)*1.667
+    }
+
+    // Outer walls
+    difference {
+        position 0 (-INNERRADIUS / 4)
+
+        cylinder {
+            size (INNERRADIUS+OUTERGAP + WALLTHICKNESS * 2) (INNERCYLINDERHEIGHT + ((INNERRADIUS + WALLTHICKNESS * 2) / 2))
+            position 0 (-WALLTHICKNESS / 2)
+        }
+        cylinder {
+            size (INNERRADIUS + OUTERGAP) (INNERCYLINDERHEIGHT + (INNERRADIUS / 2))
+        }
+    }
+}
+
+PLANTER {
+    orientation 0 0 -0.5
+}
