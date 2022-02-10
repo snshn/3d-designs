@@ -1,0 +1,93 @@
+// ShapeScript document
+
+// Name: Ender 3 Mounting Stands
+// Author: Sunshine <sunshine@uberspace.net>
+// Designed on: 02/04/2022
+
+detail 100
+
+define LEGTHICKNESS   40.6  // mm
+define WALLTHICKNESS   4    // mm
+define SCREWSIZE       4.2  // mm
+define SCREWSLOTSIZE   7.2  // mm
+define EDGE            SCREWSLOTSIZE + 1
+
+define SCREWHOLE {
+    cylinder {
+        size SCREWSIZE WALLTHICKNESS
+    }
+    cylinder {
+        size SCREWSLOTSIZE WALLTHICKNESS/2
+        position 0 (WALLTHICKNESS/4)
+    }
+}
+
+define REINFORCEMENT {
+    extrude {
+        size EDGE LEGTHICKNESS+WALLTHICKNESS WALLTHICKNESS
+        path {
+            point 0 0
+            point 1 0
+            point 0 1
+            point 0 0
+        }
+    }
+}
+
+REINFORCEMENT {
+    position LEGTHICKNESS/2+WALLTHICKNESS -LEGTHICKNESS/2 LEGTHICKNESS/2+2
+}
+
+REINFORCEMENT {
+    position LEGTHICKNESS/2+WALLTHICKNESS -LEGTHICKNESS/2 -LEGTHICKNESS/2-2
+}
+
+define PLATFORM {
+    difference {
+        // Platform
+        cube {
+            size (LEGTHICKNESS+WALLTHICKNESS*2 + EDGE) (WALLTHICKNESS) (LEGTHICKNESS+WALLTHICKNESS*2 + EDGE*2)
+        }
+
+        // Screw holes
+        SCREWHOLE {
+            position (LEGTHICKNESS/2 + EDGE/2) 0 0
+        }
+        SCREWHOLE {
+            position -(SCREWSLOTSIZE/2) 0 (LEGTHICKNESS/2 + EDGE)
+        }
+        SCREWHOLE {
+            position -(SCREWSLOTSIZE/2) 0 -(LEGTHICKNESS/2 + EDGE)
+        }
+    }
+}
+
+define MOUNTINGSTAND {
+    difference {
+        // Base
+        cube {
+            size LEGTHICKNESS + WALLTHICKNESS*2
+        }
+
+        // Cut out hole for printer legs
+        cube {
+            size LEGTHICKNESS
+        }
+        cube {
+            size LEGTHICKNESS
+            position -LEGTHICKNESS
+        }
+
+        // Chop off the bottom where the platform is
+        PLATFORM {
+            position (EDGE / 2) -(LEGTHICKNESS/2+WALLTHICKNESS/2)
+        }
+    }
+
+    PLATFORM {
+        position (EDGE / 2) -(LEGTHICKNESS/2+WALLTHICKNESS/2)
+    }
+}
+
+MOUNTINGSTAND {
+}
