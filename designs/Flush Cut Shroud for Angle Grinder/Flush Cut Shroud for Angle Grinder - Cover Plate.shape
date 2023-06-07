@@ -1,0 +1,30 @@
+// ShapeScript document
+
+/// Flush Cut Shroud for Angle Grinder - Cover Plate
+
+detail 256
+rotate 0 0 -0.5 // CAD mode
+
+define BLADEDIAMETER           125     // mm (125 for 5", 150 for 6")
+define WALLTHICKNESS             2     // mm
+define GAP                       2     // mm (distance between blade and shroud on the inside)
+define BLADEEXPOSURE            30     // mm (how much of the blade is going to "stick out")
+
+define COVERPLATE {
+
+    /// Cover plate
+    difference {
+        cylinder {
+            size BLADEDIAMETER+GAP*2+WALLTHICKNESS*2  WALLTHICKNESS/2
+        }
+
+        // Cut-off
+        cube {
+            size BLADEEXPOSURE+GAP+WALLTHICKNESS  WALLTHICKNESS/2  BLADEDIAMETER+GAP*2+WALLTHICKNESS*2
+            position -(BLADEDIAMETER / 2 - BLADEEXPOSURE / 2 + GAP / 2 + WALLTHICKNESS / 2)
+        }
+    }
+
+}
+
+COVERPLATE

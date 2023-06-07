@@ -1,0 +1,103 @@
+// ShapeScript document
+
+/// Flush Cut Shroud for Angle Grinder
+
+detail 256
+rotate 0 0 -0.5 // CAD mode
+
+define BLADEDIAMETER           125     /// mm (125 for 5", 150 for 6")
+define WALLTHICKNESS             2     /// mm
+define GAP                       2     /// mm (distance between blade and shroud on the inside)
+define BLADEEXPOSURE            30     /// mm (how much of the blade is going to "stick out")
+define CHAMBERINNERHEIGHT       22     /// mm
+define CHAMBEREXTERNALDIAMETER  BLADEDIAMETER+GAP*2+WALLTHICKNESS*2
+define CHAMBEREXTERNALHEIGHT    CHAMBERINNERHEIGHT + WALLTHICKNESS
+define TOTALHEIGHT              43     /// mm
+define TUBEHOLEDIAMETER         51.2   /// mm (this goes onto the grinder's body)
+define TUBEHEIGHT               TOTALHEIGHT - CHAMBEREXTERNALHEIGHT
+define TUBEWALLTHICKNESS        WALLTHICKNESS * 3
+define HOSECLAMPWIDTH           14.5   /// mm (need to account for both the strap and lock)
+
+define SHROUD {
+
+    /// Protective shroud
+    difference {
+        union {
+            cylinder {
+                size CHAMBEREXTERNALDIAMETER CHAMBEREXTERNALHEIGHT
+            }
+
+            /// Reinforcement ribs
+            for i in 0 to 6 {
+                cube {
+                    size CHAMBEREXTERNALDIAMETER  WALLTHICKNESS*1.5  WALLTHICKNESS
+                    position 0  CHAMBERINNERHEIGHT/2+WALLTHICKNESS*1.25
+                    orientation 0 i*1/6+0.125
+                }
+            }
+        }
+
+        /// Carve hollow space inside the shroud
+        cylinder {
+            size BLADEDIAMETER+GAP*2 CHAMBERINNERHEIGHT
+            position 0 -WALLTHICKNESS/2
+        }
+
+        /// Cut-off
+        cube {
+            size BLADEEXPOSURE+GAP+WALLTHICKNESS CHAMBEREXTERNALHEIGHT+WALLTHICKNESS*3 BLADEDIAMETER+GAP*2+WALLTHICKNESS*2
+            position -(BLADEDIAMETER / 2 - BLADEEXPOSURE / 2 + GAP / 2 + WALLTHICKNESS / 2)
+        }
+
+        /// Hole on top
+        cylinder {
+            size TUBEHOLEDIAMETER 999
+        }
+
+        /// Chop off small corners that belong to reinforcement ribs
+        difference {
+            cylinder {
+                size CHAMBEREXTERNALDIAMETER+WALLTHICKNESS CHAMBEREXTERNALHEIGHT+WALLTHICKNESS*3
+            }
+            cylinder {
+                size CHAMBEREXTERNALDIAMETER  CHAMBEREXTERNALHEIGHT+WALLTHICKNESS*3
+            }
+        }
+    }
+
+    /// Mounting tube
+    difference {
+        position 0 TUBEHEIGHT/2 + CHAMBEREXTERNALHEIGHT/2
+
+        cylinder {
+            size TUBEHOLEDIAMETER+TUBEWALLTHICKNESS TUBEHEIGHT
+        }
+
+        cylinder {
+            size TUBEHOLEDIAMETER TUBEHEIGHT
+        }
+
+        for i in 0 to 3 {
+            cube {
+                size TUBEHOLEDIAMETER+TUBEWALLTHICKNESS HOSECLAMPWIDTH+2 WALLTHICKNESS/4
+                position 0 TUBEHEIGHT/2 - HOSECLAMPWIDTH/2 - 1
+                orientation 0 i*0.25
+            }
+        }
+
+        /// Grove for hose clamp
+        difference {
+            position 0  (TUBEHEIGHT/2 - HOSECLAMPWIDTH/2 - 1)
+
+            cylinder {
+                size (TUBEHOLEDIAMETER+TUBEWALLTHICKNESS)  HOSECLAMPWIDTH
+            }
+            cylinder {
+                size (TUBEHOLEDIAMETER+TUBEWALLTHICKNESS-WALLTHICKNESS)  HOSECLAMPWIDTH
+            }
+        }
+    }
+
+}
+
+SHROUD
