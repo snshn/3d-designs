@@ -1,0 +1,65 @@
+// ShapeScript document
+
+/// Protective Boot — 94mm
+
+detail 200
+rotate 0  0  -0.5  /// CAD mode
+
+/// Bottle
+define BOTTLEBOTTOMDIAMETER   94     /// mm
+define BOTTLEBOTTOMHEIGHT     23     /// mm
+/// Absorber
+define ABSORBERWALLTHICKNESS   2     /// mm
+define ABSORBERBORDERRADIUS    (ABSORBERWALLTHICKNESS / 2)
+define ABSORBERHEIGHT          (BOTTLEBOTTOMHEIGHT + ABSORBERWALLTHICKNESS)
+
+define BORDERRADIUS {
+    difference {
+        cylinder {
+            size (BOTTLEBOTTOMDIAMETER + ABSORBERWALLTHICKNESS * 2)  ABSORBERBORDERRADIUS
+        }
+
+        cylinder {
+            size ((BOTTLEBOTTOMDIAMETER + ABSORBERWALLTHICKNESS * 2) - (ABSORBERBORDERRADIUS * 2))  ABSORBERBORDERRADIUS
+        }
+
+        extrude {
+            circle {
+                size ABSORBERBORDERRADIUS * 2
+            }
+            along circle {
+                orientation 0  0  0.5
+                size BOTTLEBOTTOMDIAMETER + ABSORBERBORDERRADIUS * 2
+            }
+
+            position 0  -(ABSORBERBORDERRADIUS / 2)
+        }
+    }
+}
+
+
+define PROTECTIVEBOOT {
+    difference {
+        cylinder {
+            size (BOTTLEBOTTOMDIAMETER + ABSORBERWALLTHICKNESS * 2)  ABSORBERHEIGHT
+        }
+
+        cylinder {
+            size BOTTLEBOTTOMDIAMETER  BOTTLEBOTTOMHEIGHT
+            position 0  (((BOTTLEBOTTOMHEIGHT + ABSORBERWALLTHICKNESS) - BOTTLEBOTTOMHEIGHT) / 2)
+        }
+
+        /// Top border-radius
+        BORDERRADIUS {
+            position 0  (ABSORBERHEIGHT / 2 - ABSORBERBORDERRADIUS / 2)
+        }
+
+        /// Bottom border-radius
+        BORDERRADIUS {
+            position 0  -(ABSORBERHEIGHT / 2 - ABSORBERBORDERRADIUS / 2)
+            orientation 1
+        }
+    }
+}
+
+PROTECTIVEBOOT
