@@ -1,0 +1,141 @@
+// ShapeScript document
+
+/// Holed Ice — Tray — 6mm Round Hole
+
+detail 100
+rotate 0 0 -0.5  /// CAD mode
+
+define STRAWDIAMETER        6     /// mm
+define ICEBLOCKDIAMETER     (STRAWDIAMETER * 4)  /// mm
+define ICEBLOCKHEIGHT       (ICEBLOCKDIAMETER / 1.5) + 1  /// mm
+define TRAYWALLTHICKNESS    2     /// mm
+define TRAYBLOCKMOLDGAP     (TRAYWALLTHICKNESS * 2)  /// mm
+define TRAYBLOCKCOUNTX      4  /// count
+define TRAYBLOCKCOUNTY      6  /// count
+define TRAYWIDTH            (((ICEBLOCKDIAMETER + TRAYWALLTHICKNESS * 2 + TRAYBLOCKMOLDGAP) * TRAYBLOCKCOUNTX) + TRAYBLOCKMOLDGAP)  /// mm
+define TRAYLENGTH           (((ICEBLOCKDIAMETER + TRAYWALLTHICKNESS * 2 + TRAYBLOCKMOLDGAP) * TRAYBLOCKCOUNTY) + TRAYBLOCKMOLDGAP)  /// mm
+define TRAYCORNERRADIUS     (ICEBLOCKDIAMETER + TRAYWALLTHICKNESS * 2 + TRAYBLOCKMOLDGAP * 2)  /// mm
+define TRAYLIDWIDTH         (TRAYWIDTH + TRAYWALLTHICKNESS * 2)  /// mm
+define TRAYLIDLENGTH        (TRAYLENGTH + TRAYWALLTHICKNESS * 2)  /// mm
+define TRAYLIDCORNERRADIUS  (TRAYCORNERRADIUS + TRAYBLOCKMOLDGAP)  /// mm
+
+define ICEBLOCKHOLEMOLD {
+    cylinder {
+        size STRAWDIAMETER  ICEBLOCKHEIGHT
+    }
+}
+
+define TOP {
+    difference {
+        position 0  -(ICEBLOCKHEIGHT + TRAYWALLTHICKNESS / 2)  0
+
+        union {
+            cube {
+                size (TRAYLIDWIDTH - TRAYLIDCORNERRADIUS)  (TRAYWALLTHICKNESS * 3)  (TRAYLIDLENGTH)
+            }
+            cube {
+                size (TRAYLIDWIDTH)  (TRAYWALLTHICKNESS * 3)  (TRAYLIDLENGTH - TRAYLIDCORNERRADIUS)
+            }
+            cylinder {
+                size TRAYLIDCORNERRADIUS  (TRAYWALLTHICKNESS * 3)
+                position ((TRAYLIDWIDTH - TRAYLIDCORNERRADIUS) / 2)  0  ((TRAYLIDLENGTH - TRAYLIDCORNERRADIUS) / 2)
+            }
+            cylinder {
+                size TRAYLIDCORNERRADIUS  (TRAYWALLTHICKNESS * 3)
+                position -((TRAYLIDWIDTH - TRAYLIDCORNERRADIUS) / 2)  0  ((TRAYLIDLENGTH - TRAYLIDCORNERRADIUS) / 2)
+            }
+            cylinder {
+                size TRAYLIDCORNERRADIUS  (TRAYWALLTHICKNESS * 3)
+                position ((TRAYLIDWIDTH - TRAYLIDCORNERRADIUS) / 2)  0  -((TRAYLIDLENGTH - TRAYLIDCORNERRADIUS) / 2)
+            }
+            cylinder {
+                size TRAYLIDCORNERRADIUS  (TRAYWALLTHICKNESS * 3)
+                position -((TRAYLIDWIDTH - TRAYLIDCORNERRADIUS) / 2)  0  -((TRAYLIDLENGTH - TRAYLIDCORNERRADIUS) / 2)
+            }
+        }
+
+        /// Bezel
+        union {
+            position 0  (TRAYWALLTHICKNESS / 2)  0
+
+            cube {
+                size (TRAYWIDTH - TRAYCORNERRADIUS)  (TRAYWALLTHICKNESS * 2)  (TRAYLENGTH)
+            }
+            cube {
+                size (TRAYWIDTH)  (TRAYWALLTHICKNESS * 2)  (TRAYLENGTH - TRAYCORNERRADIUS)
+            }
+            cylinder {
+                size TRAYCORNERRADIUS  (TRAYWALLTHICKNESS * 2)
+                position ((TRAYWIDTH - TRAYCORNERRADIUS) / 2)  0  ((TRAYLENGTH - TRAYCORNERRADIUS) / 2)
+            }
+            cylinder {
+                size TRAYCORNERRADIUS  (TRAYWALLTHICKNESS * 2)
+                position -((TRAYWIDTH - TRAYCORNERRADIUS) / 2)  0  ((TRAYLENGTH - TRAYCORNERRADIUS) / 2)
+            }
+            cylinder {
+                size TRAYCORNERRADIUS  (TRAYWALLTHICKNESS * 2)
+                position ((TRAYWIDTH - TRAYCORNERRADIUS) / 2)  0  -((TRAYLENGTH - TRAYCORNERRADIUS) / 2)
+            }
+            cylinder {
+                size TRAYCORNERRADIUS  (TRAYWALLTHICKNESS * 2)
+                position -((TRAYWIDTH - TRAYCORNERRADIUS) / 2)  0  -((TRAYLENGTH - TRAYCORNERRADIUS) / 2)
+            }
+        }
+    }
+
+    union {
+        position 0  -(ICEBLOCKHEIGHT + TRAYWALLTHICKNESS / 2)  0
+
+        cube {
+            size (TRAYWIDTH - TRAYCORNERRADIUS)  (TRAYWALLTHICKNESS)  (TRAYLENGTH - TRAYWALLTHICKNESS * 2)
+        }
+        cube {
+            size (TRAYWIDTH - TRAYWALLTHICKNESS * 2)  (TRAYWALLTHICKNESS)  (TRAYLENGTH - TRAYCORNERRADIUS)
+        }
+        cylinder {
+            size (TRAYCORNERRADIUS - TRAYWALLTHICKNESS * 2)  (TRAYWALLTHICKNESS)
+            position ((TRAYWIDTH - TRAYCORNERRADIUS) / 2)  0  ((TRAYLENGTH - TRAYCORNERRADIUS) / 2)
+        }
+        cylinder {
+            size (TRAYCORNERRADIUS - TRAYWALLTHICKNESS * 2)  (TRAYWALLTHICKNESS)
+            position -((TRAYWIDTH - TRAYCORNERRADIUS) / 2)  0  ((TRAYLENGTH - TRAYCORNERRADIUS) / 2)
+        }
+        cylinder {
+            size (TRAYCORNERRADIUS - TRAYWALLTHICKNESS * 2)  (TRAYWALLTHICKNESS)
+            position ((TRAYWIDTH - TRAYCORNERRADIUS) / 2)  0  -((TRAYLENGTH - TRAYCORNERRADIUS) / 2)
+        }
+        cylinder {
+            size (TRAYCORNERRADIUS - TRAYWALLTHICKNESS * 2)  (TRAYWALLTHICKNESS)
+            position -((TRAYWIDTH - TRAYCORNERRADIUS) / 2)  0  -((TRAYLENGTH - TRAYCORNERRADIUS) / 2)
+        }
+    }
+}
+
+define LID {
+    union {
+        difference {
+            /// Base
+            union {
+                /// Top of the lid
+                TOP {
+                    position ((TRAYWIDTH / 2) - (ICEBLOCKDIAMETER / 2 + TRAYWALLTHICKNESS + TRAYBLOCKMOLDGAP))  (ICEBLOCKHEIGHT / 2)  ((TRAYLENGTH / 2) - (ICEBLOCKDIAMETER / 2 + TRAYWALLTHICKNESS + TRAYBLOCKMOLDGAP))
+                }
+            }
+        }
+
+        /// Mold cylinders
+        union {
+            for i in 0 to (TRAYBLOCKCOUNTX - 1) {
+                for j in 0 to (TRAYBLOCKCOUNTY - 1) {
+                    ICEBLOCKHOLEMOLD {
+                        position ((ICEBLOCKDIAMETER + TRAYWALLTHICKNESS * 2 + TRAYBLOCKMOLDGAP) * i)  0  ((ICEBLOCKDIAMETER + TRAYWALLTHICKNESS * 2 + TRAYBLOCKMOLDGAP) * j)
+                    }
+                }
+            }
+        }
+    }
+}
+
+LID {
+    opacity 0.75
+}
