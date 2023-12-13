@@ -1,0 +1,270 @@
+// ShapeScript document
+
+/// Swamp Planter
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 70 * 2
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+/// Planter
+define PLANTER_OUTER_DIAMETER  120     /// mm
+define PLANTER_HEIGHT          100     /// mm
+define PLANTER_CORNER_RADIUS    10     /// mm
+define PLANTER_INNER_DIAMETER   80     /// mm
+define PLANTER_WALL_THICKNESS    3     /// mm
+
+//////////////////////////////////////////////////////////////////////////////
+
+define PLANTER_BASE {
+    difference {
+        /// Base
+        cylinder {
+            size PLANTER_OUTER_DIAMETER  PLANTER_HEIGHT
+        }
+
+        /// Round edges at top and bottom
+        define PLANTER_BASE_ROUND_EDGE {
+            difference {
+                difference {
+                    cylinder {
+                        size (PLANTER_OUTER_DIAMETER)  (PLANTER_CORNER_RADIUS / 2)
+                        position 0  (PLANTER_CORNER_RADIUS / 4)
+                    }
+
+                    cylinder {
+                        size (PLANTER_OUTER_DIAMETER - PLANTER_CORNER_RADIUS)  (PLANTER_CORNER_RADIUS / 2)
+                        position 0  (PLANTER_CORNER_RADIUS / 4)
+                    }
+                }
+
+                extrude {
+                    circle {
+                        size PLANTER_CORNER_RADIUS
+                    }
+                    along circle {
+                        size (PLANTER_OUTER_DIAMETER - PLANTER_CORNER_RADIUS)
+                        orientation 0  0  0.5
+                    }
+                }
+            }
+        }
+        PLANTER_BASE_ROUND_EDGE {
+            position 0  (PLANTER_HEIGHT / 2 - PLANTER_CORNER_RADIUS / 2)
+        }
+        PLANTER_BASE_ROUND_EDGE {
+            position 0  -(PLANTER_HEIGHT / 2 - PLANTER_CORNER_RADIUS / 2)
+            orientation 0  0  -1
+        }
+    }
+}
+
+define PLANTER_CHAMBER {
+    /// Inner chamber
+    difference {
+        /// Base
+        cylinder {
+            size PLANTER_INNER_DIAMETER  (PLANTER_HEIGHT - PLANTER_WALL_THICKNESS)
+            position 0  (PLANTER_WALL_THICKNESS / 2)
+        }
+
+        /// Round edge at bottom
+        define PLANTER_CHAMBER_ROUND_EDGE {
+            difference {
+                difference {
+                    cylinder {
+                        size (PLANTER_INNER_DIAMETER)  (PLANTER_CORNER_RADIUS / 2)
+                        position 0  -(PLANTER_CORNER_RADIUS / 4)
+                    }
+
+                    cylinder {
+                        size (PLANTER_INNER_DIAMETER - PLANTER_CORNER_RADIUS)  (PLANTER_CORNER_RADIUS / 2)
+                        position 0  -(PLANTER_CORNER_RADIUS / 4)
+                    }
+                }
+
+                extrude {
+                    circle {
+                        size PLANTER_CORNER_RADIUS
+                    }
+                    along circle {
+                        size (PLANTER_INNER_DIAMETER - PLANTER_CORNER_RADIUS)
+                        orientation 0  0  -0.5
+                    }
+                }
+            }
+        }
+        PLANTER_CHAMBER_ROUND_EDGE {
+            position 0  -(PLANTER_HEIGHT / 2 - PLANTER_CORNER_RADIUS / 2 - PLANTER_WALL_THICKNESS)
+        }
+    }
+}
+
+define PLANTER_TANK {
+    difference {
+        union {
+            /// Base
+            cylinder {
+                size (PLANTER_OUTER_DIAMETER - PLANTER_WALL_THICKNESS * 2)  (PLANTER_HEIGHT - PLANTER_WALL_THICKNESS * 2 - PLANTER_HEIGHT * 1/4)
+                position 0  -(PLANTER_HEIGHT * 1/8)
+            }
+
+            /// Top
+            extrude {
+                circle {
+                    size ((PLANTER_OUTER_DIAMETER - PLANTER_INNER_DIAMETER) - PLANTER_WALL_THICKNESS * 2)
+                }
+                along circle {
+                    size (PLANTER_INNER_DIAMETER)
+                    orientation 0  0  0.5
+                    position 0  (PLANTER_HEIGHT / 2 - PLANTER_HEIGHT * 1/4 - PLANTER_WALL_THICKNESS)
+                }
+            }
+        }
+
+        /// Cut out the core
+        cylinder {
+            size (PLANTER_INNER_DIAMETER + PLANTER_WALL_THICKNESS * 2)  (PLANTER_HEIGHT - PLANTER_WALL_THICKNESS * 2)
+        }
+
+        /// Double round edges at bottom
+        define PLANTER_TANK_ROUND_EDGE_OUTER {
+            difference {
+                difference {
+                    cylinder {
+                        size (PLANTER_OUTER_DIAMETER - PLANTER_WALL_THICKNESS * 2)  (PLANTER_CORNER_RADIUS / 2)
+                        position 0  (PLANTER_CORNER_RADIUS / 4)
+                    }
+
+                    cylinder {
+                        size (PLANTER_OUTER_DIAMETER - PLANTER_WALL_THICKNESS * 2 - PLANTER_CORNER_RADIUS)  (PLANTER_CORNER_RADIUS / 2)
+                        position 0  (PLANTER_CORNER_RADIUS / 4)
+                    }
+                }
+
+                extrude {
+                    circle {
+                        size PLANTER_CORNER_RADIUS
+                    }
+                    along circle {
+                        size (PLANTER_OUTER_DIAMETER - PLANTER_WALL_THICKNESS * 2 - PLANTER_CORNER_RADIUS)
+                        orientation 0  0  0.5
+                    }
+                }
+            }
+        }
+        PLANTER_TANK_ROUND_EDGE_OUTER {
+            position 0  -(PLANTER_HEIGHT / 2 - PLANTER_CORNER_RADIUS / 2 - PLANTER_WALL_THICKNESS)
+            orientation 0  0  -1
+        }
+        define PLANTER_TANK_ROUND_EDGE_INNER {
+            difference {
+                difference {
+                    color 1 0 0
+                    cylinder {
+                        size (PLANTER_INNER_DIAMETER + PLANTER_WALL_THICKNESS * 2 + PLANTER_CORNER_RADIUS)  (PLANTER_CORNER_RADIUS / 2)
+                        position 0  (PLANTER_CORNER_RADIUS / 4)
+                    }
+
+                    cylinder {
+                        size (PLANTER_INNER_DIAMETER + PLANTER_WALL_THICKNESS * 2)  (PLANTER_CORNER_RADIUS / 2)
+                        position 0  (PLANTER_CORNER_RADIUS / 4)
+                    }
+                }
+
+                extrude {
+                    circle {
+                        size PLANTER_CORNER_RADIUS
+                    }
+                    along circle {
+                        size (PLANTER_INNER_DIAMETER + PLANTER_WALL_THICKNESS * 2 + PLANTER_CORNER_RADIUS)
+                        orientation 0  0  0.5
+                    }
+                }
+            }
+        }
+        PLANTER_TANK_ROUND_EDGE_INNER {
+            position 0  -(PLANTER_HEIGHT / 2 - PLANTER_CORNER_RADIUS / 2 - PLANTER_WALL_THICKNESS)
+            orientation 0  0  -1
+        }
+    }
+}
+
+define PLANTER {
+    difference {
+        /// Base
+        PLANTER_BASE {
+        }
+
+        /// Chamber
+        PLANTER_CHAMBER {
+        }
+
+        /// Anti-spill cone
+        lathe path {
+            point 0  0
+            point (PLANTER_OUTER_DIAMETER / 2 - PLANTER_CORNER_RADIUS)  0
+            point 0  -(PLANTER_CORNER_RADIUS * 2)
+
+            position 0  (PLANTER_HEIGHT / 2)
+        }
+
+        /// Hanging loops
+        define PLANTER_HANGING_LOOP {
+            extrude {
+                circle {
+                    size (PLANTER_CORNER_RADIUS / 2)
+                }
+                along circle {
+                    size (PLANTER_CORNER_RADIUS * 1.5)
+                    position (PLANTER_OUTER_DIAMETER / 2)  (PLANTER_HEIGHT / 2)
+                }
+            }
+        }
+        for i in 0 to 2 {
+            PLANTER_HANGING_LOOP {
+                orientation 0  (2/3 * i)
+            }
+        }
+
+        /// Water tank
+        PLANTER_TANK {
+            color 0  0  1
+        }
+
+        /// Hydration holes (connects chamber to tank)
+        define PLANTER_HYDRATION_HOLE {
+            cylinder {
+                size (PLANTER_WALL_THICKNESS)  (PLANTER_OUTER_DIAMETER / 2)
+                orientation 0.5
+                position (PLANTER_OUTER_DIAMETER / 6)  -(PLANTER_HEIGHT / 2 - PLANTER_WALL_THICKNESS * 1.5)
+            }
+        }
+        for i in 0 to 5 {
+            PLANTER_HYDRATION_HOLE {
+                orientation 0  (2/6 * i)
+            }
+        }
+
+        /// Air vents
+        define PLANTER_AIR_VENT {
+            cylinder {
+                size (PLANTER_WALL_THICKNESS / 2)  (PLANTER_OUTER_DIAMETER / 2)
+                position (PLANTER_OUTER_DIAMETER / 2 - PLANTER_CORNER_RADIUS / 2 - PLANTER_CORNER_RADIUS / 4)  (PLANTER_HEIGHT / 2)
+            }
+        }
+        for i in 0 to 2 {
+            PLANTER_AIR_VENT {
+                orientation 0  (2/3 * i + 1/3)
+            }
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+PLANTER {
+    opacity 0.5
+}
