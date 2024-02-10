@@ -1,0 +1,95 @@
+// ShapeScript document
+
+/// Spiral Soap Dish
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 90
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define INCH_IN_MM                 25.399999619
+define PI                          3.141592653589793238462643383279502884197
+/// Soap dish
+define SOAP_DISH_BASE_THICKNESS   (3/8 * INCH_IN_MM)
+/// Spikes
+define SPIKE_COUNT                37
+define SPIKE_HEIGHT               (3/8 * INCH_IN_MM)
+define SPIKE_DIAMETER             (1.25 * INCH_IN_MM)
+
+//////////////////////////////////////////////////////////////////////////////
+
+define SPIKE {
+    difference {
+        union {
+            cylinder {
+                size SPIKE_DIAMETER  SPIKE_HEIGHT
+            }
+
+            /// Foundation
+            extrude {
+                circle {
+                    size SOAP_DISH_BASE_THICKNESS
+                }
+                along circle {
+                    size SPIKE_DIAMETER
+                    orientation 0  0  0.5
+                    position 0  -(SPIKE_HEIGHT / 2 + SOAP_DISH_BASE_THICKNESS / 2)
+                }
+            }
+            cylinder {
+                size SPIKE_DIAMETER  (SOAP_DISH_BASE_THICKNESS)
+                position 0  -(SPIKE_HEIGHT / 2 + SOAP_DISH_BASE_THICKNESS / 2)
+            }
+        }
+
+        /// Donut
+        extrude {
+            circle {
+                size (SPIKE_DIAMETER)  (SPIKE_HEIGHT * 2)
+            }
+            along circle {
+                size SPIKE_DIAMETER
+                orientation 0  0  0.5
+                position 0  (SPIKE_HEIGHT / 2)
+            }
+        }
+
+        /// Cut off the bottom half of the foundatin
+        cube {
+            size SPIKE_DIAMETER * 2  (SOAP_DISH_BASE_THICKNESS / 2)
+            position 0  -(SPIKE_HEIGHT / 2 + SOAP_DISH_BASE_THICKNESS / 1.25)
+        }
+    }
+}
+
+define SOAP_DISH {
+    difference {
+        union {
+            define a    SPIKE_DIAMETER / 2.5
+            define gap  (SPIKE_DIAMETER / 9)
+
+            for s in 1 to SPIKE_COUNT {
+                define t  (2 * PI * sqrt(2 * s / a))
+                define x  (gap * t * cos(t))
+                define y  (gap * t * sin(t))
+
+                SPIKE {
+                    position x  0  y
+                }
+            }
+        }
+
+        /// Get rid of the sharp tip
+        cube {
+            size (SPIKE_DIAMETER * 10)  (SPIKE_HEIGHT / 4)  (SPIKE_DIAMETER * 10)
+            position 0  (SPIKE_HEIGHT / 2)
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+SOAP_DISH {
+}
