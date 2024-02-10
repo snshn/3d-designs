@@ -1,0 +1,50 @@
+// ShapeScript document
+
+/// Ice Straw – 6mm Round
+
+detail 190
+rotate 0 0 -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+/// Straw
+define STRAW_DIAMETER        6     /// mm
+define STRAW_LENGTH          195
+/// Ice blocks
+define ICE_BLOCK_DIAMETER     (STRAW_DIAMETER * 4)  /// mm
+define ICE_BLOCK_HEIGHT       (ICE_BLOCK_DIAMETER / 1.5) + 1  /// mm
+
+//////////////////////////////////////////////////////////////////////////////
+
+define ICE_STRAW {
+    difference {
+        union {
+            cylinder {
+                size (STRAW_DIAMETER)  (STRAW_LENGTH)
+            }
+
+            difference {
+                cylinder {
+                    size (ICE_BLOCK_DIAMETER + 0.2 * 2 * 8)  (STRAW_LENGTH / 2)
+                }
+
+                cylinder {
+                    size (ICE_BLOCK_DIAMETER + 0.2)  (STRAW_LENGTH / 2)
+                    position 0  0.8
+                }
+
+                position 0  (STRAW_LENGTH / 10)
+            }
+        }
+
+        cylinder {
+            size (STRAW_DIAMETER - (0.2 * 2 * 2))  (STRAW_LENGTH)
+        }
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+ICE_STRAW {
+}
